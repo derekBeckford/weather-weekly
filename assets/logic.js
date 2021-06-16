@@ -5,10 +5,12 @@ var apiKey = "89e1dd605080547acf5ebc5c895d51ad"
 $(".search-button").click(function(){
     
     currentForecast();
+    fiveDayForecast();
 })
 
 var currentForecast = function(){
-    var citySearched = $(".city-search").val();
+    var citySearched = "Austin"
+    //$(".city-search").val();
 
     var apiUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + citySearched + "&units=imperial" + "&appid=" + apiKey
 
@@ -17,6 +19,7 @@ var currentForecast = function(){
         return response.json();
     })
     .then(function(data){
+        var currentDate = moment().format('L');
         var weatherIcon = "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
         var currentTemp = data.main.temp 
         var currentWind = data.wind.speed
@@ -53,7 +56,7 @@ var currentForecast = function(){
             }
         })
 
-        $("#current-city").html("<h1>" + citySearched + "</h1>");
+        $("#current-city").html("<h1>" + citySearched + " (" + currentDate + ")</h1>");
         $("#weather-img").html("<img src='" + weatherIcon + "'></img>")
         $("#current-temp").html("<p> Temp: " + currentTemp + "&#8457 </p>")
         $("#current-wind").html("<p> Wind: "+ currentWind +" MPH</p>")
@@ -63,4 +66,33 @@ var currentForecast = function(){
 
 }
 
+var fiveDayForecast = function(){
+    var citySearched = "Austin"
+    //$(".city-search").val();
+
+    var apiUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + citySearched + "&units=imperial" + "&appid=" + apiKey
+    fetch(apiUrl)
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){
+        console.log(data);
+        for (i=1; i < data.list.length; i++){
+            var weatherIcon = "http://openweathermap.org/img/wn/" + data.list[i].weather[0].icon + ".png";
+            var futureTime = data.list[i].dt_txt.substr(11,18)
+            var forecastWindSpeed = data.list[i].wind.speed
+            var forecastTemp = data.list[i].main.temp
+            var forecastHumidity = data.list[i].main.humidity
+
+            if (futureTime === "12:00:00"){
+                console.log(forecastTemp)
+                console.log(forecastWindSpeed)
+                console.log(forecastHumidity)
+            }
+
+            
+        }
+    })
+}
 currentForecast();
+fiveDayForecast();
