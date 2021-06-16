@@ -17,3 +17,16 @@
 .container {
   margin-left: 20px;
 }
+
+#uv-color{
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+}
+
+.current {
+  padding-left: 20px;
+  padding-top: 5px;
+}
