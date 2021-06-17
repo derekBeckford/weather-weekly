@@ -19,14 +19,44 @@
 }
 
 #uv-color{
-  padding-top: 2px;
-  padding-bottom: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
   border-radius: 5px;
+  padding: 2px 10px 2px 10px
 }
 
 .current {
   padding-left: 20px;
   padding-top: 5px;
+}
+
+#five-day {
+  display: flex;
+  flex-direction: row;
+}
+
+#current-city{
+  text-transform: capitalize;
+}
+
+.card {
+  flex-grow: 5;
+  margin: 5px;
+  color: white;
+  background-color: #2596be;
+  padding: 10px;
+  
+}
+
+.date {
+  font-weight: bolder;
+  color: white;
+  font-size: larger;
+  padding-bottom: 10px;
+}
+
+.info {
+  padding-bottom: 20px;
+}
+
+.search {
+  padding-top: 24px;
 }
