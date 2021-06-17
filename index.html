@@ -22,6 +22,7 @@
       <div class="row">
         <div id="content-left" class="col-md-3 search">
           <!--Search Button-->
+          <h3>Search for a city:</h3>
           <div class="input-group">
             <input
               type="search"
@@ -40,7 +41,6 @@
           <!-- clear storage button -->
           <a id="clear-storage" href="#"></a>
         </div>
-
         <div id="content-right" class="col-md-9 pt-4">
           <div id="current-report" class="border rounded current">
             <div id="current-city"></div>
@@ -50,7 +50,11 @@
             <div id="current-humidity"></div>
             <div id="current-UVIndex"></div>
           </div>
-          <div id="five-day" class="mt-5"></div>
+          <!--Five Day Forecast-->
+          <div>
+            <h2 class="five">5-Day Forecast:</h2>
+            <div id="five-day"></div>
+          </div>
         </div>
       </div>
     </section>

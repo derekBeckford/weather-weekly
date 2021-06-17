@@ -1,15 +1,26 @@
 var apiKey = "89e1dd605080547acf5ebc5c895d51ad";
 var search = 0;
-var searchedCities = [];
+var searchedCities = JSON.parse(localStorage.getItem("Cities")) ?? [];
+window.onload = function(){
+  currentForecast();
+}
 
 $(".search-button").click(function () {
   currentForecast();
-  fiveDayForecast();
+  showCities();
 });
 
-var currentForecast = function () {
-  var citySearched = $(".city-search").val();
-  searchedCities.push(citySearched);
+var currentForecast = function (city = "") {
+  var citySearched = city !== "" ? city : $(".city-search").val();
+  
+  if (citySearched === ''){
+    citySearched = "Austin";
+  } 
+  citySearched = citySearched.toUpperCase();
+  if(searchedCities.indexOf(citySearched) === -1){
+    searchedCities.push(citySearched);
+  }
+  
   var apiUrl =
     "http://api.openweathermap.org/data/2.5/weather?q=" +
     citySearched +
@@ -56,7 +67,7 @@ var currentForecast = function () {
           if (uvIndex >= 11) {
             $("#uv-color").css("background-color", "purple");
             $("#uv-color").css("color", "White");
-          } else if (uvIndex < 11 && uvIndex > 7) {
+          } else if (uvIndex < 11 && uvIndex > 8) {
             $("#uv-color").css("background-color", "red");
             $("#uv-color").css("color", "White");
           } else if (uvIndex < 8 && uvIndex > 5) {
@@ -79,11 +90,13 @@ var currentForecast = function () {
     });
   search++;
 
-  localStorage.setItem("Cities", searchedCities);
+  localStorage.setItem("Cities", JSON.stringify(searchedCities));
+  fiveDayForecast(citySearched);
 };
 
-var fiveDayForecast = function () {
-  var citySearched = $(".city-search").val();
+var fiveDayForecast = function (city ="") {
+  var citySearched = city;
+  
   var apiUrl =
     "http://api.openweathermap.org/data/2.5/forecast?q=" +
     citySearched +
@@ -98,7 +111,7 @@ var fiveDayForecast = function () {
       console.log(data);
       var day = 1;
       $("#five-day").empty();
-      for (var i = 3; i < data.list.length; i += 8) {
+      for (var i = 0; i < data.list.length; i++) {
         var weatherIcon =
           "http://openweathermap.org/img/wn/" +
           data.list[i].weather[0].icon +
@@ -108,24 +121,42 @@ var fiveDayForecast = function () {
         var forecastTemp = data.list[i].main.temp;
         var forecastHumidity = data.list[i].main.humidity;
 
-        $("#five-day").append(`<div id="day-${day}" class ="card"></div>`);
-        $(`#day-${day}`).append(
-          `<div class='forecast-temp date'>${futureDate} </div>`
-        );
-        $(`#day-${day}`).append(
-          `<div class='forecast-temp info'><img src=" ${weatherIcon}"></img></div>`
-        );
-        $(`#day-${day}`).append(
-          `<div class='forecast-temp info'>Temp: ${forecastTemp}&#8457 </div>`
-        );
-        $(`#day-${day}`).append(
-          `<div class='forecast-wind-speed info'>Wind: ${forecastWindSpeed} MPH</div>`
-        );
-        $(`#day-${day}`).append(
-          `<div class='forecast-humidity info'>Humidity: ${forecastHumidity}</div>`
-        );
+        var dayTime = data.list[i].dt_txt.substr(11, 18);
+
+        if (dayTime === "12:00:00") {
+          $("#five-day").append(`<div id="day-${day}" class ="card"></div>`);
+          $(`#day-${day}`).append(
+            `<div class='forecast-temp date'>${futureDate} </div>`
+          );
+          $(`#day-${day}`).append(
+            `<div class='forecast-temp info'><img src=" ${weatherIcon}"></img></div>`
+          );
+          $(`#day-${day}`).append(
+            `<div class='forecast-temp info'>Temp: ${forecastTemp}&#8457 </div>`
+          );
+          $(`#day-${day}`).append(
+            `<div class='forecast-wind-speed info'>Wind: ${forecastWindSpeed} MPH</div>`
+          );
+          $(`#day-${day}`).append(
+            `<div class='forecast-humidity info'>Humidity: ${forecastHumidity}</div>`
+          );
+        }
 
         day++;
       }
     });
 };
+
+var showCities = function () {
+  $("#prior-cities").empty();
+  var priorCities = $("#prior-cities");
+  for (var i = 0; i < searchedCities.length; i++) {
+    var city = searchedCities[i];
+    priorCities.prepend(
+      `<button type="button" class="city-button list-group-item previous-list" onclick="currentForecast('${city}')">${city}</button>`
+    );
+  }
+  
+};
+
+showCities();
