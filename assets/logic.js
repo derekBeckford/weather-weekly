@@ -1,9 +1,9 @@
 var apiKey = "89e1dd605080547acf5ebc5c895d51ad";
 var search = 0;
 var searchedCities = JSON.parse(localStorage.getItem("Cities")) ?? [];
-window.onload = function(){
+window.onload = function () {
   currentForecast();
-}
+};
 
 $(".search-button").click(function () {
   currentForecast();
@@ -12,17 +12,17 @@ $(".search-button").click(function () {
 
 var currentForecast = function (city = "") {
   var citySearched = city !== "" ? city : $(".city-search").val();
-  
-  if (citySearched === ''){
+
+  if (citySearched === "") {
     citySearched = "Austin";
-  } 
+  }
   citySearched = citySearched.toUpperCase();
-  if(searchedCities.indexOf(citySearched) === -1){
+  if (searchedCities.indexOf(citySearched) === -1) {
     searchedCities.push(citySearched);
   }
-  
+
   var apiUrl =
-    "http://api.openweathermap.org/data/2.5/weather?q=" +
+    "https://api.openweathermap.org/data/2.5/weather?q=" +
     citySearched +
     "&units=imperial" +
     "&appid=" +
@@ -35,7 +35,7 @@ var currentForecast = function (city = "") {
     .then(function (data) {
       var currentDate = moment().format("L");
       var weatherIcon =
-        "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
+        "https://openweathermap.org/img/wn/" + data.weather[0].icon + ".png";
       var currentTemp = data.main.temp;
       var currentWind = data.wind.speed;
       var currentHumidity = data.main.humidity + "%";
@@ -44,7 +44,7 @@ var currentForecast = function (city = "") {
       var uvIndex;
 
       var currentUVIndex =
-        "http://api.openweathermap.org/data/2.5/uvi?lat=" +
+        "https://api.openweathermap.org/data/2.5/uvi?lat=" +
         lat +
         "&lon=" +
         lon +
@@ -94,11 +94,11 @@ var currentForecast = function (city = "") {
   fiveDayForecast(citySearched);
 };
 
-var fiveDayForecast = function (city ="") {
+var fiveDayForecast = function (city = "") {
   var citySearched = city;
-  
+
   var apiUrl =
-    "http://api.openweathermap.org/data/2.5/forecast?q=" +
+    "https://api.openweathermap.org/data/2.5/forecast?q=" +
     citySearched +
     "&units=imperial" +
     "&appid=" +
@@ -113,7 +113,7 @@ var fiveDayForecast = function (city ="") {
       $("#five-day").empty();
       for (var i = 0; i < data.list.length; i++) {
         var weatherIcon =
-          "http://openweathermap.org/img/wn/" +
+          "https://openweathermap.org/img/wn/" +
           data.list[i].weather[0].icon +
           ".png";
         var futureDate = moment(data.list[i].dt_txt).format("L");
@@ -156,7 +156,6 @@ var showCities = function () {
       `<button type="button" class="city-button list-group-item previous-list" onclick="currentForecast('${city}')">${city}</button>`
     );
   }
-  
 };
 
 showCities();
