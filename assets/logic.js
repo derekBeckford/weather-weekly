@@ -156,5 +156,3 @@ var showCities = function () {
     );
   }
 };
-
-showCities();
