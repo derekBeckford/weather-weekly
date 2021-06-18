@@ -108,7 +108,6 @@ var fiveDayForecast = function (city = "") {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
       var day = 1;
       $("#five-day").empty();
       for (var i = 0; i < data.list.length; i++) {
