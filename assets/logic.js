@@ -1,5 +1,4 @@
 var apiKey = "89e1dd605080547acf5ebc5c895d51ad";
-var search = 0;
 var searchedCities = JSON.parse(localStorage.getItem("Cities")) ?? [];
 window.onload = function () {
   currentForecast();
@@ -17,9 +16,6 @@ var currentForecast = function (city = "") {
     citySearched = "Austin";
   }
   citySearched = citySearched.toUpperCase();
-  if (searchedCities.indexOf(citySearched) === -1) {
-    searchedCities.push(citySearched);
-  }
 
   var apiUrl =
     "https://api.openweathermap.org/data/2.5/weather?q=" +
@@ -30,6 +26,12 @@ var currentForecast = function (city = "") {
 
   fetch(apiUrl)
     .then(function (response) {
+      if (response.status !== 200) {
+        return Promise.reject("City does not exist!");
+      }
+      if (searchedCities.indexOf(citySearched) === -1) {
+        searchedCities.push(citySearched);
+      }
       return response.json();
     })
     .then(function (data) {
@@ -87,11 +89,12 @@ var currentForecast = function (city = "") {
       $("#current-temp").html("<p> Temp: " + currentTemp + "&#8457 </p>");
       $("#current-wind").html("<p> Wind: " + currentWind + " MPH</p>");
       $("#current-humidity").html("<p> Humidity: " + currentHumidity + "</p>");
+      localStorage.setItem("Cities", JSON.stringify(searchedCities));
+      fiveDayForecast(citySearched);
+    })
+    .catch((error) => {
+      alert(error);
     });
-  search++;
-
-  localStorage.setItem("Cities", JSON.stringify(searchedCities));
-  fiveDayForecast(citySearched);
 };
 
 var fiveDayForecast = function (city = "") {
